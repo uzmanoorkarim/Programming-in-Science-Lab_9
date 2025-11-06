@@ -26,11 +26,20 @@ print("Max amplitude:", max_amp)
 # This function reads a file containing standing wave data with length and tension values into a NumPy array.
 # It also computes the wave speed using v = sqrt(T/μ), where μ = mass per unit length (assumed to be 1 for simplicity).
 def read_standing_wave_data(filename):
-    data = np.loadtxt(filename, delimiter = ',', skiprows = 1)
+# Open and read file
+    with open(filename) as f:
+        lines = f.readlines()[1:]  # skip header
+    # Convert data to a NumPy array
+    data = np.array([line.strip().split(',') for line in lines], dtype=float)
+    # Extract columns
     length = data[:, 0]
     tension = data[:, 1]
-    mu = 1
-    wave_speed = np.sqrt(tension/mu)
-    return  wave_speed
-speed = read_standing_wave_data (r"C:\Users\2473732\Downloads\standing_wave.csv")
-print(speed)
+    # Given mu = 1  v = sqrt(T/μ) = sqrt(T)
+    wave_speed = np.sqrt(tension)
+    return length, tension, wave_speed
+
+length, tension, wave_speed = read_standing_wave_data(r"/Users/uzma/Desktop/standing_wave.csv")
+print("Each position in the lists corresponds to the same measurement:")
+print("Lengths:", length)
+print("Tensions:", tension)
+print("Wave speeds:", wave_speed)
